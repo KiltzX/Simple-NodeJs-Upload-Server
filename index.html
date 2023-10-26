@@ -1,0 +1,18 @@
+<!doctype html>
+<html>
+<head>
+    <title>Upload de Arquivos</title>
+</head>
+<body>
+    <h1>Upload de Arquivos</h1>
+    <form action="/upload" method="POST" enctype="multipart/form-data">
+        <label for="folderName">Nome da Pasta:</label>
+        <input type="text" name="folderName" id="folderName" required>
+        <br>
+        <input type="file" name="files" multiple>
+        <br>
+        <input type="submit" value="Enviar">
+    </form>
+</body>
+</html>
+
