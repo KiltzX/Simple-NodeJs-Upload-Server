@@ -5,7 +5,7 @@
 </head>
 <body>
     <h1>Upload de Arquivos</h1>
-    <form action="/upload" method="POST" enctype="multipart/form-data">
+    <form id="uploadForm" action="/upload" method="POST" enctype="multipart/form-data">
         <label for="folderName">Nome da Pasta:</label>
         <input type="text" name="folderName" id="folderName" required>
         <br>
@@ -13,6 +13,46 @@
         <br>
         <input type="submit" value="Enviar">
     </form>
+    <div id="progressContainer"></div>
+
+    <script>
+        const uploadForm = document.getElementById('uploadForm');
+        const progressContainer = document.getElementById('progressContainer');
+
+        uploadForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(uploadForm);
+
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '/upload', true);
+
+            xhr.upload.addEventListener('progress', (event) => {
+                if (event.lengthComputable) {
+                    const percentComplete = (event.loaded / event.total) * 100;
+                    const fileName = event.target.fileName || 'Desconhecido';
+
+                    const progressDiv = document.querySelector(`[data-file="${fileName}"]`);
+                    if (progressDiv) {
+                        progressDiv.style.width = percentComplete + '%';
+                    }
+                }
+            });
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        alert('Arquivos enviados com sucesso!');
+                    } else {
+                        alert('Erro ao enviar arquivos.');
+                    }
+                }
+            };
+
+            formData.append('folderName', document.getElementById('folderName').value);
+
+            xhr.send(formData);
+        });
+    </script>
 </body>
 </html>
-
